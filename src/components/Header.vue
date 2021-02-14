@@ -8,9 +8,7 @@ import title from '@/components/Header';
 <script>
 export default {
   data () {
-    return {
-
-    }
+    return {}
   },
   props: {
     title: {

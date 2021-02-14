@@ -1,7 +1,8 @@
 <template>
-  <div id="content">
+  <div id="main">
     <Header title="喵喵影院"></Header>
-    <div class="cinema_menu">
+    <div id="content">
+      <div class="cinema_menu">
       <div class="city_switch">
         全城 <i class="iconfont icon-lower-triangle"></i>
       </div>
@@ -11,17 +12,18 @@
       <div class="feature_switch">
         特色 <i class="iconfont icon-lower-triangle"></i>
       </div>
+      </div>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-    <tabbar></tabbar>
+    <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header'
-import tabbar from '@/components/Tabbar'
+import Tabbar from '@/components/Tabbar'
 
 export default {
   data () {
@@ -29,7 +31,7 @@ export default {
   },
   components: {
     Header,
-    tabbar
+    Tabbar
   }
 }
 </script>

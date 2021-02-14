@@ -1,28 +1,52 @@
 <template>
-  <div id="content">
+  <div id="main">
     <Header title="喵喵电影"></Header>
-    <div class="movie_menu">
-      <router-link to="/film/city" tag="div" active-class="active" class="city_name">
-        <span>大连</span><i class="iconfont icon-lower-triangle"></i>
-      </router-link>
-      <div class="hot_swtich">
-        <router-link to="/film/nowplaying" tag="div" active-class="active" class="hot_item">正在热映</router-link>
-        <router-link to="/film/comingsoon" tag="div" active-class="active" class="hot_item">即将上映</router-link>
+    <div id="content">
+      <div class="movie_menu">
+        <router-link
+          to="/film/city"
+          tag="div"
+          active-class="active"
+          class="city_name"
+        >
+          <span>大连</span><i class="iconfont icon-lower-triangle"></i>
+        </router-link>
+        <div class="hot_swtich">
+          <router-link
+            to="/film/nowplaying"
+            tag="div"
+            active-class="active"
+            class="hot_item"
+            >正在热映</router-link
+          >
+          <router-link
+            to="/film/comingsoon"
+            tag="div"
+            active-class="active"
+            class="hot_item"
+            >即将上映</router-link
+          >
+        </div>
+        <router-link
+          to="/film/search"
+          tag="div"
+          active-class="active"
+          class="search_entry"
+        >
+          <i class="iconfont icon-sousuo"></i>
+        </router-link>
       </div>
-      <router-link to="/film/search" tag="div" active-class="active" class="search_entry">
-        <i class="iconfont icon-sousuo"></i>
-      </router-link>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-    <tabbar></tabbar>
+    <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header'
-import tabbar from '@/components/Tabbar'
+import Tabbar from '@/components/Tabbar'
 
 export default {
   data () {
@@ -30,7 +54,7 @@ export default {
   },
   components: {
     Header,
-    tabbar
+    Tabbar
   }
 }
 </script>

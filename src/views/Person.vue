@@ -1,16 +1,18 @@
 <template>
-  <div id="content">
+  <div id="main">
     <Header title="我的喵喵"></Header>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-    <tabbar></tabbar>
+    <div id="content">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </div>
+    <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header'
-import tabbar from '@/components/Tabbar'
+import Tabbar from '@/components/Tabbar'
 
 export default {
   data () {
@@ -18,7 +20,7 @@ export default {
   },
   components: {
     Header,
-    tabbar
+    Tabbar
   }
 }
 </script>

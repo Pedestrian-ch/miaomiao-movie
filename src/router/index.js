@@ -31,7 +31,7 @@ const router = new VueRouter({
       component: () => import('@/components/Detail')
     },
     {
-      path: '',
+      path: '*',
       redirect: '/film'
     }
   ]

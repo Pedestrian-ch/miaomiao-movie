@@ -1,31 +1,46 @@
 <template>
   <div class="city_body">
     <div class="city_list">
-      <div class="city_hot">
-        <h2>热门城市</h2>
-        <ul class="clearfix">
-          <li v-for="item in hotCity" :key="item.id">
-            {{ item.nm }}
-          </li>
-        </ul>
-      </div>
-      <div class="city_sort">
-        <div v-for="(item, key) in cityList" :key="key">
-          <h2 :id="key">{{ key }}</h2>
-          <ul>
-            <li v-for="data in item" :key="data.id">
-              {{ data.nm }}
-            </li>
-          </ul>
+      <Loader v-if="!haveData"></Loader>
+      <Scroller v-else ref="city_List">
+        <div>
+          <div class="city_hot">
+            <h2>热门城市</h2>
+            <ul class="clearfix">
+              <li
+                v-for="item in hotCity"
+                :key="item.id"
+                @tap="handleToCity(item.nm, item.id)"
+              >
+                {{ item.nm }}
+              </li>
+            </ul>
+          </div>
+          <div class="city_sort" ref="city_sort">
+            <div v-for="(item, key) in cityList" :key="key">
+              <h2 :id="key">{{ key }}</h2>
+              <ul>
+                <li
+                  v-for="data in item"
+                  :key="data.id"
+                  @tap="handleToCity(data.nm, data.id)"
+                >
+                  {{ data.nm }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+      </Scroller>
     </div>
     <div class="city_index">
       <ul>
-        <li v-for="(item, key) in cityList" :key="key">
-          <a :href="'#' + key" style="color: fff">{{
-            key
-          }}</a>
+        <li
+          v-for="(item, key) in cityList"
+          :key="key"
+          @touchstart="handleToKey(key)"
+        >
+          {{ key }}
         </li>
       </ul>
     </div>
@@ -33,12 +48,12 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
-      cityList: [],
-      hotCity: []
+      cityList: {},
+      hotCity: [],
+      haveData: false
     }
   },
 
@@ -112,36 +127,56 @@ export default {
   },
   methods: {
     getData () {
-      axios.get('/data/index.json').then((res) => {
-        // 城市列表
-        var cityList = res.data.letterMap
-        // 热门城市列表
-        var hotCity = []
+      var cityList = window.localStorage.getItem('cityList')
+      var hotCity = window.localStorage.getItem('hotCity')
+      if (cityList && hotCity) {
+        this.cityList = JSON.parse(cityList)
+        this.hotCity = JSON.parse(hotCity)
+        this.haveData = true
+      } else {
+        this.axios.get('/data/index.json').then((res) => {
+          this.haveData = true
+          // 城市列表
+          cityList = res.data.letterMap
+          // 热门城市列表
+          hotCity = []
 
-        // 找出属于热门城市的城市
-        for (var key in cityList) {
-          cityList[key].forEach(item => {
-            if (item.rank === 'A' || item.rank === 'S') {
-              hotCity.push(item)
+          // 找出属于热门城市的城市
+          for (var key in cityList) {
+            cityList[key].forEach((item) => {
+              if (item.rank === 'A' || item.rank === 'S') {
+                hotCity.push(item)
+              }
+            })
+          }
+
+          // 根据rank值排序
+          hotCity.sort((a, b) => {
+            if (a.rank > b.rank) {
+              return -1
+            } else if (a.rank < b.rank) {
+              return 1
+            } else {
+              return 0
             }
           })
-        }
 
-        // 根据rank值排序
-        hotCity.sort((a, b) => {
-          if (a.rank > b.rank) {
-            return -1
-          } else if (a.rank < b.rank) {
-            return 1
-          } else {
-            return 0
-          }
+          this.cityList = cityList
+          this.hotCity = hotCity
+          window.localStorage.setItem('cityList', JSON.stringify(cityList))
+          window.localStorage.setItem('hotCity', JSON.stringify(hotCity))
         })
-
-        this.cityList = cityList
-        this.hotCity = hotCity
-        console.log(hotCity)
-      })
+      }
+    },
+    handleToKey (key) {
+      var h2 = this.$refs.city_sort.getElementsByTagName('h2')
+      this.$refs.city_List.toScrollTop(-h2[key].offsetTop)
+    },
+    handleToCity (nm, id) {
+      this.$store.commit('CITY_INFO', { nm, id })
+      window.localStorage.setItem('cityName', nm)
+      window.localStorage.setItem('cityId', id)
+      this.$router.push('/film/nowplaying')
     }
   }
 }
@@ -158,6 +193,8 @@ export default {
 }
 .city_body .city_list {
   flex: 1;
+  display: flex;
+  align-items: center;
   overflow: auto;
   background: #fff5f0;
 }

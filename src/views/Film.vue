@@ -6,32 +6,34 @@
         <router-link
           to="/film/city"
           tag="div"
-          active-class="active"
           class="city_name"
+          active-class="active"
         >
-          <span>大连</span><i class="iconfont icon-lower-triangle"></i>
+          <span>{{ this.$store.state.city.cityName }}</span
+          ><i class="iconfont icon-lower-triangle"></i>
         </router-link>
         <div class="hot_swtich">
           <router-link
             to="/film/nowplaying"
             tag="div"
-            active-class="active"
             class="hot_item"
+            active-class="active"
+            ref="hot_item"
             >正在热映</router-link
           >
           <router-link
             to="/film/comingsoon"
             tag="div"
-            active-class="active"
             class="hot_item"
+            active-class="active"
             >即将上映</router-link
           >
         </div>
         <router-link
           to="/film/search"
           tag="div"
-          active-class="active"
           class="search_entry"
+          active-class="active"
         >
           <i class="iconfont icon-sousuo"></i>
         </router-link>
@@ -79,6 +81,10 @@ export default {
   color: #ef4238;
   border-bottom: 2px #ef4238 solid;
 }
+.movie_menu .city_name.router-link-active {
+  color: #ef4238;
+  border-bottom: 2px #ef4238 solid;
+}
 .movie_menu .hot_swtich {
   display: flex;
   height: 100%;
@@ -96,12 +102,20 @@ export default {
   color: #ef4238;
   border-bottom: 2px #ef4238 solid;
 }
+.movie_menu .hot_item.router-link-active {
+  color: #ef4238;
+  border-bottom: 2px #ef4238 solid;
+}
 .movie_menu .search_entry {
   margin-right: 20px;
   height: 100%;
   line-height: 45px;
 }
 .movie_menu .search_entry.active {
+  color: #ef4238;
+  border-bottom: 2px #ef4238 solid;
+}
+.movie_menu .search_entry.router-link-active {
   color: #ef4238;
   border-bottom: 2px #ef4238 solid;
 }

@@ -62,7 +62,7 @@ export default {
   },
   watch: {
     searchData () {
-      axios.get('/ajax/search?kw=' + encodeURI(this.searchData) + '&cityId=1&stype=-1').then(res => {
+      axios.get('/ajax/search?kw=' + encodeURI(this.searchData) + '&cityId=' + this.$store.state.city.cityId + '&stype=-1').then(res => {
         console.log(res)
         if (JSON.stringify(res.data) !== '{}') {
           this.cinemaList = res.data.cinemas.list

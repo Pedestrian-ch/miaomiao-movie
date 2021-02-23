@@ -1,37 +1,95 @@
 <template>
   <div class="movie_body">
-    <ul>
-      <li v-for="item in comingList" :key="item.id">
-        <div class="pic_show"><img :src="item.img | filterImgUrl()" /></div>
-        <div class="info_list">
-          <h2>{{item.nm}} <span v-if="item.version" :class="'version ' + item.version"></span></h2>
-          <p><span class="person">{{item.wish}}</span> 人想看</p>
-          <p>主演: {{item.star}}</p>
-          <p>{{item.rt}}上映</p>
-        </div>
-        <div class="btn_pre">预售</div>
-      </li>
-    </ul>
+    <Loader v-if="!haveData"></Loader>
+    <Scroller :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd" v-else ref="movie_body">
+      <ul>
+        <li v-for="item in dataObject.coming" :key="item.id">
+          <div class="pic_show"><img :src="item.img | filterImgUrl()" /></div>
+          <div class="info_list">
+            <h2>{{item.nm}} <span v-if="item.version" :class="'version ' + item.version"></span></h2>
+            <p><span class="person">{{item.wish}}</span> 人想看</p>
+            <p>主演: {{item.star}}</p>
+            <p>{{item.rt}}上映</p>
+          </div>
+          <div class="btn_pre">预售</div>
+        </li>
+        <li v-if="isPrompt" style="border: none">
+          <Loader v-if="isLoader"></Loader>
+          <div v-else
+           style="margin: 0 auto">{{ pullUpMsg }}</div>
+        </li>
+      </ul>
+    </Scroller>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Vue from 'vue'
-Vue.filter('filterImgUrl', (data) => {
-  return data.replace('w.h', '128.180')
-})
 export default {
   data () {
     return {
-      comingList: []
+      dataObject: {}, // 数据存储的对象
+      isLoader: false, // 是否正在上拉加载请求
+      haveData: false, // 是否页面数据是否正在请求
+      isPrompt: false, // 是否显示上拉加载提示
+      pullUpMsg: '', // 显示的提示内容
+      cityId: -1 // 存储城市id，进而比较存储的与现在的城市id是否相同以此判断是否需要更新keep-alive的缓存
     }
   },
-  mounted () {
-    axios.get('/ajax/comingList/?token=&ci=1').then(res => {
-      console.log(res)
-      this.comingList = res.data.coming
-    })
+  activated () {
+    if (this.cityId !== this.$store.state.city.cityId) {
+      this.haveData = false
+      this.axios.get('/ajax/comingList?token=&ci=' + this.$store.state.city.cityId).then((res) => {
+        this.dataObject = res.data
+        this.haveData = true
+        this.cityId = this.$store.state.city.cityId
+        this.isPrompt = false
+        if (this.$refs.movie_body) {
+          this.$refs.movie_body.toScrollTop(0)
+          setTimeout(() => {
+            this.$refs.movie_body.scroll.refresh()
+          }, 500)
+        }
+      })
+    }
+  },
+  methods: {
+    handleToDetail () {
+      console.log('handleToDetail')
+    },
+    handleToScroll (pos, scroll) {
+      if (pos.y < scroll.maxScrollY - 30) {
+        this.isPrompt = true
+        this.pullUpMsg = '上拉加载更多'
+      }
+    },
+    handleToTouchEnd (pos, scroll) {
+      if (pos.y < scroll.maxScrollY - 30) {
+        var len = this.dataObject.coming.length
+        this.isLoader = true
+        scroll.refresh()
+        if (len !== this.dataObject.movieIds.length) {
+          this.axios
+            .get(
+              '/ajax/moreComingList?ci=' + this.$store.state.city.cityId + '&token=&limit=10&movieIds=' +
+                encodeURI(
+                  this.dataObject.movieIds.slice(len, len + 10).join(',')
+                )
+            )
+            .then((res) => {
+              this.pullUpMsg = '加载完毕'
+              this.dataObject.coming.push(...res.data.coming)
+              this.isLoader = false
+              this.isPrompt = false
+              setTimeout(() => {
+                scroll.refresh()
+              }, 500)
+            })
+        } else {
+          this.pullUpMsg = '没有更多数据了'
+          this.isLoader = false
+        }
+      }
+    }
   }
 }
 </script>
@@ -40,6 +98,9 @@ export default {
 #content .movie_body {
   flex: 1;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .movie_body ul {
   margin: 0 12px;

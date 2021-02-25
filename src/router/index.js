@@ -20,7 +20,9 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  // 注意我们现在是在localhost:8080根目录下访问的，但是我们可能是在某个域名的子文件下访问的，例如localhost:8080/miaomiao-movices，base的作用就是指定根目录
+  // base: process.env.BASE_URL,
+  base: 'miaomiao-movices', // 配置根目录为miaomiao-movices
   routes: [
     filmRouter,
     cinemaRouter,

@@ -6,7 +6,7 @@
     <Loader v-if="!haveData" style="position: absolute; left: 50%; top: 50%; margin-top: -4px; margin-left: -20px"></Loader>
     <div id="content" class="contentDetail" v-else>
       <div class="detail_list">
-        <div class="detail_list_bg"></div>
+        <div class="detail_list_bg" :style="'background-image:' + 'url(' + detailMovie.img.replace('w.h/', '') + ')'"></div>
         <div class="detail_list_filter"></div>
         <div class="detail_list_content">
           <div class="detail_list_img">
@@ -61,7 +61,6 @@ export default {
     }
   },
   activated () {
-    console.log(this.movieId)
     this.haveData = false
     this.axios.get('/ajax/detailmovie?movieId=' + this.movieId).then((res) => {
       this.detailMovie = res.data.detailMovie
@@ -93,8 +92,8 @@ export default {
 .detail_list .detail_list_bg {
   width: 100%;
   height: 100%;
-  background: url(/images/movie_1.jpg) 0 40%;
-  filter: blur(20px);
+  background: 0 40%;
+  filter: blur(1px);
   background-size: cover;
   position: absolute;
   left: 0;

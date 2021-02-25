@@ -8,9 +8,9 @@
       v-else
     >
       <ul>
-        <li v-for="item in dataObject.movieList" :key="item.id">
-          <div class="pic_show" @tap="handleToDetail">
-            <img :src="item.img | filterImgUrl()" />
+        <li v-for="item in dataObject.movieList" :key="item.id" @tap="handleToDetail(item.id)">
+          <div class="pic_show">
+            <img :src="item.img | filterImgUrl('@1l_1e_1c_128w_180h')" />
           </div>
           <div class="info_list">
             <h2>
@@ -68,8 +68,8 @@ export default {
     }
   },
   methods: {
-    handleToDetail () {
-      console.log('handleToDetail')
+    handleToDetail (movieId) {
+      this.$router.push('/detail/' + movieId)
     },
     handleToScroll (pos, scroll) {
       if (pos.y < scroll.maxScrollY - 30) {

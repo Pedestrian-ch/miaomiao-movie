@@ -9,8 +9,8 @@
     <div class="search_result">
       <h3 v-if="this.movieList.length">电影/电视剧/综艺</h3>
       <ul>
-        <li v-for="item in movieList" :key="item.id">
-          <div class="img"><img :src="item.img | filterImgUrl()" /></div>
+        <li v-for="item in movieList" :key="item.id" @touchend="handleToDetail(item.id)">
+          <div class="img"><img :src="item.img | filterImgUrl('@1l_1e_1c_128w_180h')" /></div>
           <div class="info">
             <p><span>{{item.nm}}<span v-if="item.version" :class="'version ' + item.version"></span></span>&nbsp;<span>{{item.sc}}分</span></p>
             <p>{{item.enm}}</p>
@@ -48,10 +48,6 @@
 
 <script>
 import axios from 'axios'
-import Vue from 'vue'
-Vue.filter('filterImgUrl', (data) => {
-  return data.replace('w.h', '128.180')
-})
 export default {
   data () {
     return {
@@ -63,12 +59,16 @@ export default {
   watch: {
     searchData () {
       axios.get('/ajax/search?kw=' + encodeURI(this.searchData) + '&cityId=' + this.$store.state.city.cityId + '&stype=-1').then(res => {
-        console.log(res)
         if (JSON.stringify(res.data) !== '{}') {
           this.cinemaList = res.data.cinemas.list
           this.movieList = res.data.movies.list
         }
       })
+    }
+  },
+  methods: {
+    handleToDetail (moiveId) {
+      this.$router.push('/detail/' + moiveId)
     }
   }
 }

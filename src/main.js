@@ -10,8 +10,8 @@ import axios from 'axios'
 import Loader from '@/components/Loading'
 Vue.prototype.axios = axios
 
-Vue.filter('filterImgUrl', (data) => {
-  return data.replace('w.h', '128.180') + '@1l_1e_1c_128w_180h'
+Vue.filter('filterImgUrl', (url, wh) => {
+  return url.replace('w.h/', '').replace('@2500w_2500h_1l_0e', '') + wh
 })
 Vue.component('Scroller', Scroller)
 Vue.component('Loader', Loader)

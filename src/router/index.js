@@ -26,9 +26,10 @@ const router = new VueRouter({
     cinemaRouter,
     personRouter,
     {
-      path: '/detail',
+      path: '/detail/:movieId',
       name: 'detail',
-      component: () => import('@/components/Detail')
+      component: () => import('@/views/Detail'),
+      props: true
     },
     {
       path: '*',

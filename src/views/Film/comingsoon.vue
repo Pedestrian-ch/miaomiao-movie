@@ -3,8 +3,8 @@
     <Loader v-if="!haveData"></Loader>
     <Scroller :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd" v-else ref="movie_body">
       <ul>
-        <li v-for="item in dataObject.coming" :key="item.id">
-          <div class="pic_show"><img :src="item.img | filterImgUrl()" /></div>
+        <li v-for="item in dataObject.coming" :key="item.id" @tap="handleToDetail(item.id)">
+          <div class="pic_show"><img :src="item.img | filterImgUrl('@1l_1e_1c_128w_180h')" /></div>
           <div class="info_list">
             <h2>{{item.nm}} <span v-if="item.version" :class="'version ' + item.version"></span></h2>
             <p><span class="person">{{item.wish}}</span> 人想看</p>
@@ -53,8 +53,8 @@ export default {
     }
   },
   methods: {
-    handleToDetail () {
-      console.log('handleToDetail')
+    handleToDetail (moiveId) {
+      this.$router.push('/detail/' + moiveId)
     },
     handleToScroll (pos, scroll) {
       if (pos.y < scroll.maxScrollY - 30) {

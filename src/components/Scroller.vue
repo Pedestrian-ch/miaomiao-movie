@@ -24,12 +24,6 @@ export default {
       this.scroller()
     }, 500)
   },
-  // activated () {
-  //   // 确保dom结构全部渲染完成
-  //   setTimeout(() => {
-  //     this.scroll.refresh()
-  //   }, 500)
-  // },
   methods: {
     scroller () {
       var scroll = new BScroll(this.$refs.wrapper, {

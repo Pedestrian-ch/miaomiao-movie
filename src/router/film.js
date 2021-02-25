@@ -14,10 +14,12 @@ export default {
   },
   {
     path: 'city',
+    name: 'city',
     component: () => import('@/components/City')
   },
   {
     path: 'search',
+    name: 'search',
     component: () => import('@/components/Search')
   },
   {

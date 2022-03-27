@@ -1,29 +1,43 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import filmRouter from './film'
+import cinemaRouter from './cinema'
+import personRouter from './person'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+// const routes = [
+//   {
+//     path: '/about',
+//     name: 'About',
+//     // route level code-splitting
+//     // this generates a separate chunk (about.[hash].js) for this route
+//     // which is lazy-loaded when the route is visited.
+//     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+
+//   }
+// ]
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+  // 注意我们现在是在localhost:8080根目录下访问的，但是我们可能是在某个域名的子文件下访问的，例如localhost:8080/miaomiao-movices，base的作用就是指定根目录
+  // base: process.env.BASE_URL,
+  base: 'miaomiao-movices', // 配置根目录为miaomiao-movices
+  routes: [
+    filmRouter,
+    cinemaRouter,
+    personRouter,
+    {
+      path: '/detail/:movieId',
+      name: 'detail',
+      component: () => import('@/views/Detail'),
+      props: true
+    },
+    {
+      path: '*',
+      redirect: '/film'
+    }
+  ]
 })
 
 export default router
